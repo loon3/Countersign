@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		CWsign
+	</title>
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/mnemonic.js"></script>
+    <script src="js/bitcore/bitcore.min.js"></script>
+ 	<script src="js/bitcoinjs-min.js"></script>
+    <script src="js/bitcoinsig.js"></script>
+    <script src="js/brainlite.js"></script>
+    
+    <script>
+    
+     	var bitcore = require('bitcore');
+     	
+    	$(document).ready(function () {
+    		
+    		$("#showresult").hide();
+    		
+    		 var qtHdr = [
+      			"-----BEGIN BITCOIN SIGNED MESSAGE-----",
+      			"-----BEGIN BITCOIN SIGNATURE-----",
+      			"-----END BITCOIN SIGNATURE-----"
+    			];
+
+    		function makedSignedMessage(msg, addr, sig)
+    		{
+        		return qtHdr[0]+'\n'+msg +'\n'+qtHdr[1]+'\nVersion: Bitcoin-qt (1.0)\nAddress: '+addr+'\n\n'+sig+'\n'+qtHdr[2];
+    		}
+    		
+    		function getprivkey(inputaddr){
+    			//var inputaddr = $('#inputaddress').val();
+    			
+    			var string = $('#inputpassphrase').val().trim().toLowerCase();
+                string = string.replace(/\s{2,}/g, ' ');
+                var array = string.split(" ");
+                
+                m2 = new Mnemonic(array);
+                
+                var HDPrivateKey = bitcore.HDPrivateKey.fromSeed(m2.toHex(), bitcore.Networks.livenet);
+                
+                 
+                        for (var i = 0; i < 50; i++) {
+                            
+                            var derived = HDPrivateKey.derive("m/0'/0/" + i);
+                            var address1 = new bitcore.Address(derived.publicKey, bitcore.Networks.livenet);
+                           
+                            var pubkey = address1.toString();
+                            
+                            if (inputaddr == pubkey) {
+                            var privkey = derived.privateKey.toWIF();
+                            break;
+                            
+                            }
+                        }
+                
+                return privkey;
+    		}
+    		
+    		
+    		
+    		function signwith(privkey, pubkey, message) {
+    			
+    			
+    			
+    			//var message = "Message, message";
+      			var p = updateAddr(privkey, pubkey);
+      			
+      			if ( !message || !p.address ){
+        		return;
+      			}
+
+      			message = fullTrim(message);
+
+      			
+        		var sig = sign_message(p.key, message, p.compressed, p.addrtype);
+   
+
+      			sgData = {"message":message, "address":p.address, "signature":sig};
+
+      			signature_final = makedSignedMessage(sgData.message, sgData.address, sgData.signature);
+    			
+    			return signature_final;
+    
+    		}
+    		
+         
+        	$("#signmessagebutton").click(function() {
+			  	var inputaddr = $('#inputaddress').val();
+			  	var message = $('#inputmessage').val();
+			  	
+			  	var privkey = getprivkey(inputaddr);
+			  	
+			  	var signature = signwith(privkey, inputaddr, message);
+			  	
+			  	$("#returnsig").html("<pre>" + signature + "</pre>")
+			  	
+			  	$("#inputinfo").hide();
+			  	$("#showresult").show();
+			  	
+			}); 
+         
+         
+    	});
+    </script>
+    
+</head>
+<body>
+<h1 align="center" style="margin-top: 60px;">CWsign</h1>
+
+<div style="margin: auto; width: 600px;">
+<p align="center" style="margin: 0px 40px 0px 40px;">Verify ownership of your Counterparty address using your Counterwallet secret passphrase. Message signing is performed client-side with Javascript. For added security, this page can also be run in offline/disconnected mode.</h1>
+<div id="inputinfo">
+<div style="margin: 10px auto 0 auto; padding: 30px;">
+<form>
+  <div class="form-group">
+    <label for="inputpassphrase">Counterwallet Secret Passphrase</label>
+    <input type="text" class="form-control" id="inputpassphrase" value="afraid friendship trip bedroom bury believe movie stick nightmare tease balance direction">
+  </div>
+  <div class="form-group">
+    <label for="inputaddress">Address</label>
+    <input type="text" class="form-control" id="inputaddress" value="17iG6NwKocART3JphQdFNUvn4JW8ucdoso">
+  </div>
+  <div class="form-group">
+    <label for="inputmessage">Message</label>
+    <input type="text" class="form-control" id="inputmessage" value="This is my message">
+
+  </div>
+  <div align="center" style="margin: auto;">
+  <button type="button" class="btn btn-default" id="signmessagebutton">Sign Message</button>
+  </div>
+</form>	
+</div>
+</div>
+
+<div id="showresult">
+	<div style="margin: 34px 0 0 0; padding: 30px;">
+		<div id="returnsig"></div>
+	</div>	
+</div>
+
+</div>
+
+<div id="footer" align="center" style="margin: 30px 0 50px 0;">
+<p>
+Uses code from <a href="https://brainwallet.github.io/">Brainwallet</a> and <a href="https://blockscan.com/tool_generatekey">Blockscan</a>
+</p>
+
+<p>
+created by <a href="http://joelooney.org/">loon3design</a>
+</p>
+<p>
+Helpful? Tip the developer! BTC/LTBc -> 1GcFhAQGFZVDAr4jiR2tKwisHcgNUjhGNC
+</p>
+</div>
+</body>
+</html>
