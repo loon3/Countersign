@@ -1,0 +1,66 @@
+<!doctype html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>
+		Countersign
+	</title>
+	
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    
+    
+    <script src="js/mnemonic.js"></script>
+    <script src="js/bitcore/bitcore.min.js"></script>
+ 	<script src="js/bitcoinjs-min.js"></script>
+    <script src="js/bitcoinsig.js"></script>
+    <script src="js/brainlite.js"></script>
+    <script src="background.js"></script>
+   
+</head>
+<body>
+
+    
+<div align="center" style="margin: 20px 0 10px 0; font-size: 36px; font-weight: bold;"><div style="display: inline-block; ">Countersign</div> <div style="display: inline-block;"><img src="icon-48.png"></div></div>
+
+<div style="margin: auto; width: 90%;">
+
+<div id="inputinfo">
+<div style="margin: 0 auto 0 auto; padding: 10px 30px 30px 30px;">
+<form>
+  <div class="form-group">
+    <label for="inputpassphrase">Counterwallet Secret Passphrase</label>
+    <input type="text" class="form-control" id="inputpassphrase" placeholder="afraid friendship trip bedroom bury believe movie stick nightmare tease balance direction">
+  </div>
+  <div class="form-group">
+    <label for="inputaddress">Address</label>
+    <input type="text" class="form-control" id="inputaddress" placeholder="17iG6NwKocART3JphQdFNUvn4JW8ucdoso">
+  </div>
+  <div class="form-group">
+    <label for="inputmessage">Message</label>
+    <input type="text" class="form-control" id="inputmessage" placeholder="This is my message">
+
+  </div>
+  <div align="center" style="margin: auto; padding-top: 5px;">
+  <button type="button" class="btn btn-primary" id="signmessagebutton">Sign Message</button>
+  </div>
+</form>	
+</div>
+</div>
+
+<div id="showresult">
+	<div style="margin: 0 0 0 0; padding: 22px;">
+		<div id="returnsig"></div>
+	</div>	
+    <div align="center" style="margin: auto;">
+  <button type="button" class="btn btn-default" id="resetbutton">Reset</button>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+
+  "name": "Countersign",
+  "description": "Sign messages with Counterwallet passphrase",
+  "version": "0.0.2",
+
+  "icons": { "16": "icon-16.png",
+           "48": "icon-48.png",
+          "128": "icon-128.png" },
+  "homepage_url": "http://joelooney.org",
+    
+    "background": {	    
+	    "scripts": ["initial.js"]        
+	  },
+  "browser_action": {
+    "default_icon": "icon-48.png",
+    "default_title": "Countersign"
+  
+  }
+    
+}
